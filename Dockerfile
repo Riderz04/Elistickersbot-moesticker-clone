@@ -1,7 +1,7 @@
-# imagen base ligera con Go
-FROM golang:1.21-bullseye AS builder
+# Usa una imagen base de Go
+FROM golang:1.22
 
-# dependencias externas necesarias
+# Instala dependencias externas necesarias para tu bot
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     imagemagick \
@@ -12,31 +12,23 @@ RUN apt-get update && apt-get install -y \
 # Crea directorio de trabajo
 WORKDIR /app
 
-# Copia los archivos del bot
+# Copia los archivos del repositorio
 COPY . .
 
-# librerías GO + binario
-RUN go mod tidy && go build -o bot ./cmd/moe-sticker-bot
+# Descarga dependencias de Go
+RUN go mod tidy
 
-# Imagen final 
-FROM debian:bullseye-slim
+# Compila el bot
+RUN go build -o bot ./cmd/moe-sticker-bot
 
-# dependencias necesarias en runtime
-RUN apt-get update && apt-get install -y \
-    ffmpeg \
-    imagemagick \
-    exiv2 \
-    gifsicle \
-    && rm -rf /var/lib/apt/lists/*
+# Variables de entorno necesarias
+ENV BOT_TOKEN=${BOT_TOKEN}
+ENV DB_ADDR=${DB_ADDR}
+ENV DB_USER=${DB_USER}
+ENV DB_PASS=${DB_PASS}
+ENV DB_NAME=${DB_NAME}
 
-WORKDIR /app
+# Comando de inicio
+CMD ["./bot"]
 
-# Copia el binario compilado
-COPY --from=builder /app/bot .
-
-# Variables de entorno
-ENV TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
-ENV DATABASE_URL=${DATABASE_URL}
-
-# Comando final para ejecutar el bot
 CMD ["./bot"]
