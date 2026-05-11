@@ -5,7 +5,8 @@ import (
 	"os"
 	"strings"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/joho/godotenv"
+	logrus "github.com/sirupsen/logrus"
 	"github.com/star-39/moe-sticker-bot/core"
 )
 
@@ -14,7 +15,15 @@ import (
 // SS : StickerSet
 
 func main() {
+	// ✅ Cargar variables desde .env
+	err := godotenv.Load()
+	if err != nil {
+		logrus.Warn("No se pudo cargar .env, usando variables del sistema")
+	}
+
 	conf := parseCmdLine()
+
+	// ✅ Inicializar el bot con la configuración
 	core.Init(conf)
 }
 
@@ -27,15 +36,11 @@ func parseCmdLine() core.ConfigTemplate {
 	var WebappApiListenAddr = flag.String("webapp_listen_addr", "", "Webapp API server listen address(IP:PORT)")
 	var webappDataDir = flag.String("webapp_data_dir", "", "Where to put webapp data to share with ReactApp ")
 	var dbAddr = flag.String("db_addr", "", "mariadb(mysql) address, if unset, database will be disabled.")
-	var dbUser = flag.String("db_user", "", "mariadb(mysql) usernmae")
+	var dbUser = flag.String("db_user", "", "mariadb(mysql) username")
 	var dbPass = flag.String("db_pass", "", "mariadb(mysql) password")
 	var logLevel = flag.String("log_level", "debug", "Log level")
-	// var botApiAddr = flag.String("botapi_addr", "", "Local Bot API Server Address")
-	// var botApiDir = flag.String("botapi_dir", "", "Local Bot API Working directory")
-	// var webhookPublicAddr = flag.String("webhook_public_addr", "", "Webhook public address(WebhookEndpoint).")
-	// var webhookListenAddr = flag.String("webhook_listen_addr", "", "Webhook listen address(IP:PORT)")
-	// var webhookCert = flag.String("webhook_cert", "", "Certificate for WebHook")
 	flag.Parse()
+
 	if *help {
 		flag.Usage()
 		println("Only --bot_token is required to run.")
@@ -44,35 +49,43 @@ func parseCmdLine() core.ConfigTemplate {
 
 	conf := core.ConfigTemplate{}
 
+	// ✅ Leer BOT_TOKEN desde .env si no se pasa por argumento
 	conf.BotToken = *botToken
 	if conf.BotToken == "" {
-		log.Error("Please set --bot_token")
-		log.Error("Use --help to see options.")
-		log.Fatal("No bot token provided!")
+		conf.BotToken = os.Getenv("BOT_TOKEN")
+	}
+	if conf.BotToken == "" {
+		logrus.Error("Please set BOT_TOKEN in .env")
+		logrus.Fatal("No bot token provided!")
 	}
 	if !strings.Contains(conf.BotToken, ":") {
-		log.Fatal("Bad bot token!")
+		logrus.Fatal("Bad bot token!")
 	}
 
-	conf.DbAddr = *dbAddr
-	conf.DbUser = *dbUser
-	conf.DbPass = *dbPass
+	// ✅ Leer datos de la DB desde .env
+	if *dbAddr == "" {
+		conf.DbAddr = os.Getenv("DB_ADDR")
+	} else {
+		conf.DbAddr = *dbAddr
+	}
+	if *dbUser == "" {
+		conf.DbUser = os.Getenv("DB_USER")
+	} else {
+		conf.DbUser = *dbUser
+	}
+	if *dbPass == "" {
+		conf.DbPass = os.Getenv("DB_PASS")
+	} else {
+		conf.DbPass = *dbPass
+	}
 
 	conf.WebappUrl = *webappUrl
 	conf.WebappDataDir = *webappDataDir
 	conf.WebappApiListenAddr = *WebappApiListenAddr
 
-	// conf.BotApiAddr = *botApiAddr
-	// conf.BotApiDir = *botApiDir
-	// conf.WebhookPublicAddr = *webhookPublicAddr
-	// conf.WebhookListenAddr = *webhookListenAddr
-	// conf.WebhookCert = *webhookCert
-
 	conf.LogLevel = *logLevel
-
 	conf.AdminUid = *adminUid
 	conf.DataDir = *dataDir
 
 	return conf
-	// core.Config = conf
 }
