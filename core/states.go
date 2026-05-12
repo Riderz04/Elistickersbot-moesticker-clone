@@ -2,6 +2,7 @@ package core
 
 import (
 	"errors"
+	"fmt"
 	"path"
 	"path/filepath"
 	"strconv"
@@ -483,13 +484,14 @@ func waitEmojiChoice(c tele.Context) error {
 			for range ud.stickerData.stickers {
 				ud.commitChans = append(ud.commitChans, make(chan bool))
 			}
-			setState(c, "waitSEmojiAssign")
+			setState(c, "waitEmojiChoice")
 			return sendAskEmojiAssign(c)
 		default:
 			return nil
 		}
 	} else {
-		emojis := findEmojis(c.Message().Text)
+		fmt.Println("El bot leyó este texto:", c.Message().Text)
+		emojis := c.Message().Text
 		if emojis == "" {
 			return c.Reply("Send emoji or press button a button.\n請傳送emoji或點選按鈕。 /quit")
 		}

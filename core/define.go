@@ -145,10 +145,10 @@ type StickerFile struct {
 	//////////////////
 	//Following fields comply with tele.InputSticker
 	//////////////////
-	emojis   []string `json:"emoji_list"`
-	keywords []string `json:"keywords"`
+	Emojis   []string `json:"emoji_list"`
+	Keywords []string `json:"keywords"`
 	//One of static, video, animated.
-	format string `json:"format"`
+	Format string `json:"format"`
 }
 
 // General sticker data for internal use.

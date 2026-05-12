@@ -42,8 +42,8 @@ func submitStickerSetAuto(createSet bool, c tele.Context) error {
 
 	//Set emojis and keywords in batch.
 	for _, s := range ud.stickerData.stickers {
-		s.emojis = ud.stickerData.emojis
-		s.keywords = MSB_DEFAULT_STICKER_KEYWORDS
+		s.Emojis = ud.stickerData.emojis
+		s.Keywords = MSB_DEFAULT_STICKER_KEYWORDS
 	}
 
 	//Try batch create.
@@ -147,8 +147,8 @@ func submitStickerManual(createSet bool, pos int, emojis []string, keywords []st
 	}
 
 	sf := ud.stickerData.stickers[pos]
-	sf.emojis = emojis
-	sf.keywords = keywords
+	sf.Emojis = emojis
+	sf.Keywords = keywords
 
 	//Do not submit to goroutine when creating sticker set.
 	if createSet && pos == 0 {
@@ -220,12 +220,12 @@ func createStickerSet(safeMode bool, sf *StickerFile, c tele.Context, name strin
 	log.Debugln("createStickerSet: attempting, sticker file path:", sf.cPath)
 
 	input := tele.InputSticker{
-		Emojis:   sf.emojis,
-		Keywords: sf.keywords,
+		Emojis:   sf.Emojis,
+		Keywords: sf.Keywords,
 	}
 	if sf.fileID != "" {
 		input.Sticker = sf.fileID
-		input.Format = sf.format
+		input.Format = sf.Format
 	} else {
 		input.Sticker = "file://" + file
 		input.Format = guessInputStickerFormat(file)
@@ -266,12 +266,12 @@ func createStickerSetBatch(sfs []*StickerFile, c tele.Context, name string, titl
 		sf.wg.Wait()
 		file := sf.cPath
 		input := tele.InputSticker{
-			Emojis:   sf.emojis,
-			Keywords: sf.keywords,
+			Emojis:   sf.Emojis,
+			Keywords: sf.Keywords,
 		}
 		if sf.fileID != "" {
 			input.Sticker = sf.fileID
-			input.Format = sf.format
+			input.Format = sf.Format
 		} else {
 			input.Sticker = "file://" + file
 			input.Format = guessInputStickerFormat(file)
@@ -313,12 +313,12 @@ func commitSingleticker(pos int, flCount *int, safeMode bool, sf *StickerFile, c
 	// For each sticker, retry at most 2 times, means 3 commit attempts in total.
 	for i := 0; i < 3; i++ {
 		input := tele.InputSticker{
-			Emojis:   sf.emojis,
-			Keywords: sf.keywords,
+			Emojis:   sf.Emojis,
+			Keywords: sf.Keywords,
 		}
 		if sf.fileID != "" {
 			input.Sticker = sf.fileID
-			input.Format = sf.format
+			input.Format = sf.Format
 		} else {
 			input.Sticker = "file://" + file
 			input.Format = guessInputStickerFormat(file)
@@ -430,7 +430,7 @@ func appendMedia(c tele.Context) error {
 		}
 		sfs = append(sfs, &StickerFile{
 			fileID: c.Message().Sticker.FileID,
-			format: format,
+			Format: format,
 		})
 		log.Debugf("One received sticker file OK. ID:%s", c.Message().Sticker.FileID)
 		goto CONTINUE
