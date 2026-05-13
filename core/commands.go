@@ -35,24 +35,6 @@ func cmdDownload(c tele.Context) error {
 	return sendAskWhatToDownload(c)
 }
 
-func cmdAbout(c tele.Context) error {
-	sendAboutMessage(c)
-	return nil
-}
-
-func cmdFAQ(c tele.Context) error {
-	sendFAQ(c)
-	return nil
-}
-
-func cmdPrivacy(c tele.Context) error {
-	return sendPrivacy(c)
-}
-
-func cmdChangelog(c tele.Context) error {
-	return sendChangelog(c)
-}
-
 func cmdStart(c tele.Context) error {
 	return sendStartMessage(c)
 }
