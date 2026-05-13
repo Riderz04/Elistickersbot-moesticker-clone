@@ -100,7 +100,7 @@ func handleNoSession(c tele.Context) error {
 			return confirmImport(c, true)
 		case CB_OK_DN:
 			ud := initUserData(c, "download", "process")
-			c.Send("Please wait...")
+			c.Send("Espere, por favor...")
 			msbimport.ParseImportLink(findLink(c.Message().ReplyTo.Text), ud.lineData)
 			return downloadLineSToZip(c, ud)
 		case CB_EXPORT_WA:
@@ -110,7 +110,7 @@ func handleNoSession(c tele.Context) error {
 			go prepareWebAppExportStickers(ss, hex)
 			return sendConfirmExportToWA(c, id, hex)
 		case CB_BYE:
-			return c.Send("Bye. /start")
+			return c.Send("Bye bye~~ usa de nuevo /start para iniciarme")
 		}
 	}
 
@@ -229,7 +229,7 @@ func stateProcessing(c tele.Context) error {
 			return cmdQuit(c)
 		}
 	}
-	return c.Send("Processing, please wait... 作業中, 請稍後... /quit")
+	return c.Send("Procesando, espere por favor... cancela usando /quit")
 }
 
 func statePrepareSManage(c tele.Context) error {
@@ -248,17 +248,17 @@ func statePrepareSManage(c tele.Context) error {
 		goto NEXT
 	}
 	if !matchUserS(c.Sender().ID, ud.stickerData.id) {
-		return c.Send("Sorry, this sticker set cannot be edited. try another or /quit")
+		return c.Send("Lo siento, este paquete de stickers no se puede editar. Prueba con otro o cancela usando /quit")
 	}
 
 NEXT:
 	err := retrieveSSDetails(c, ud.stickerData.id, ud.stickerData)
 	if err != nil {
-		return c.Send("bad sticker set! try again or /quit")
+		return c.Send("Paquete de stickers incorrecto! intenta de nuevo o usa /quit")
 	}
 	err = prepareWebAppEditStickers(users.data[c.Sender().ID])
 	if err != nil {
-		return c.Send("error preparing stickers for webapp /quit")
+		return c.Send("error al preparar stickers para la webapp, cancela con /quit")
 	}
 	if ud.stickerData.cAmount == 120 {
 		sendStickerSetFullWarning(c)
@@ -297,18 +297,18 @@ func waitCbEditChoice(c tele.Context) error {
 func waitSDel(c tele.Context) error {
 	ud := users.data[c.Sender().ID]
 	if c.Message().Sticker == nil {
-		return c.Send("send sticker! try again or /quit")
+		return c.Send("envía un sticker! intenta de nuevo o cancela con /quit")
 	}
 	if c.Message().Sticker.SetName != ud.stickerData.id {
-		return c.Send("wrong sticker! try again or /quit")
+		return c.Send("sticker incorrecto! intenta de nuevo o cancela con /quit")
 	}
 
 	err := c.Bot().DeleteSticker(c.Message().Sticker.FileID)
 	if err != nil {
-		c.Send("error deleting sticker! try another one or /quit")
+		c.Send("error al eliminar sticker! intenta de nuevo con otro o cancela con /quit")
 		return err
 	}
-	c.Send("Delete OK. 成功刪除一張貼圖。")
+	c.Send("Eliminado con éxito")
 	ud.stickerData.cAmount--
 	if ud.stickerData.cAmount == 0 {
 		deleteUserS(ud.stickerData.id)
@@ -332,7 +332,7 @@ func waitCbDelset(c tele.Context) error {
 	}
 	ud := users.data[c.Sender().ID]
 	setState(c, "process")
-	c.Send("please wait...")
+	c.Send("Espere por favor...")
 
 	ss, _ := c.Bot().StickerSet(ud.stickerData.id)
 	for _, s := range ss.Stickers {
@@ -340,7 +340,7 @@ func waitCbDelset(c tele.Context) error {
 	}
 	deleteUserS(ud.stickerData.id)
 	deleteLineS(ud.stickerData.id)
-	c.Send("Delete set OK. bye")
+	c.Send("Paquete de sticker eliminado. bye bye~")
 	endManageSession(c)
 	terminateSession(c)
 	return nil
@@ -348,7 +348,7 @@ func waitCbDelset(c tele.Context) error {
 
 func waitSType(c tele.Context) error {
 	if c.Callback() == nil {
-		return c.Send("Please press a button. /quit")
+		return c.Send("Por favor, pulsa un botón. /quit")
 	}
 
 	ud := users.data[c.Sender().ID]
@@ -380,7 +380,7 @@ func waitSFile(c tele.Context) error {
 	if c.Message().Media() != nil {
 		err := appendMedia(c)
 		if err != nil {
-			c.Reply("Failed processing this file. 處理此檔案時錯誤:\n" + err.Error())
+			c.Reply("Error al procesar este archivo:\n" + err.Error())
 		}
 		return nil
 	} else {
@@ -388,7 +388,7 @@ func waitSFile(c tele.Context) error {
 	}
 NEXT:
 	if len(users.data[c.Sender().ID].stickerData.stickers) == 0 {
-		return c.Send("No image received. try again or /quit")
+		return c.Send("Sin imagen recibida. prueba de nuevo o usa /quit")
 	}
 
 	setState(c, "waitEmojiChoice")
@@ -432,7 +432,7 @@ func waitSTitle(c tele.Context) error {
 	}
 
 	if !checkTitle(ud.stickerData.title) {
-		return c.Send("bad title! try again or /quit")
+		return c.Send("Usa un título válido! intenta de nuevo o usa /quit")
 	}
 
 	switch command {
@@ -478,7 +478,7 @@ func waitEmojiChoice(c tele.Context) error {
 		case "random":
 			users.data[c.Sender().ID].stickerData.emojis = []string{"⭐"}
 		case "manual":
-			sendProcessStarted(ud, c, "preparing...")
+			sendProcessStarted(ud, c, "preparando...")
 			setState(c, ST_PROCESSING)
 			ud.wg.Wait()
 			for range ud.stickerData.stickers {
@@ -493,7 +493,7 @@ func waitEmojiChoice(c tele.Context) error {
 		fmt.Println("El bot leyó este texto:", c.Message().Text)
 		emojis := c.Message().Text
 		if emojis == "" {
-			return c.Reply("Send emoji or press button a button.\n請傳送emoji或點選按鈕。 /quit")
+			return c.Reply("Envía un emoji o pulsa un botón. /quit")
 		}
 		users.data[c.Sender().ID].stickerData.emojis = []string{emojis}
 	}
@@ -511,7 +511,7 @@ func waitEmojiChoice(c tele.Context) error {
 func waitSEmojiAssign(c tele.Context) error {
 	emojiList := findEmojiList(c.Message().Text)
 	if len(emojiList) == 0 {
-		return c.Reply("Please send emoji and keywords(optional).\n請傳送emoji和 關鍵字(可選)。\ntry again or /quit")
+		return c.Reply("Por favor envía un emoji o palabra clave(optional).\nintenta de nuevo o cancela con /quit")
 	}
 	keywords := stripEmoji(c.Message().Text)
 	keywordList := []string{}

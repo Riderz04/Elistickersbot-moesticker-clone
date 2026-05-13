@@ -468,8 +468,8 @@ func appendMedia(c tele.Context) error {
 		}
 
 		if err != nil {
-			log.Warnln("Failed converting one user sticker", err)
-			c.Send("Failed converting one user sticker:" + err.Error())
+			log.Warnln("Error al convertir el sticker", err)
+			c.Send("Error al convertir el sticker:" + err.Error())
 			continue
 		}
 		sfs = append(sfs, &StickerFile{

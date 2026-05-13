@@ -116,12 +116,12 @@ func downloadStickersAndSend(s *tele.Sticker, setID string, c tele.Context) erro
 		}
 	}
 
-	editProgressMsg(0, 0, "success! /start", pText, pMsg, c)
+	editProgressMsg(0, 0, "Finalizado! usa de nuevo /start para iniciarme", pText, pMsg, c)
 	return nil
 }
 
 func downloadGifToZip(c tele.Context) error {
-	c.Reply("Downloading, please wait...\n正在下載, 請稍等...")
+	c.Reply("Descargando, por favor espere...")
 	workDir := filepath.Join(dataDir, secHex(4))
 	os.MkdirAll(workDir, 0755)
 	defer os.RemoveAll(workDir)
