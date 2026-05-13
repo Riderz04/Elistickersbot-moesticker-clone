@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     imagemagick \
     exiv2 \
     gifsicle \
+    libarchive-tools \
     && rm -rf /var/lib/apt/lists/*
 
 # Crea directorio de trabajo
@@ -29,6 +30,4 @@ ENV DB_PASS=${DB_PASS}
 ENV DB_NAME=${DB_NAME}
 
 # Comando de inicio
-CMD ["./bot"]
-
 CMD ["./bot"]
