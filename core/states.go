@@ -340,7 +340,7 @@ func waitCbDelset(c tele.Context) error {
 	}
 	deleteUserS(ud.stickerData.id)
 	deleteLineS(ud.stickerData.id)
-	c.Send("Paquete de sticker eliminado. bye bye~")
+	c.Send("Paquete de sticker eliminado")
 	endManageSession(c)
 	terminateSession(c)
 	return nil
