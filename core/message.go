@@ -39,7 +39,7 @@ Usa los siguientes comandos para iniciar tu experiencia:</blockquote>
 
 func sendCommandList(c tele.Context) error {
 	message := `
-🟣<blockquote><b>Comandos disponibles</b></blockquote>🟣
+<blockquote><b>🟣Comandos disponibles🟣</b></blockquote>
 ━━━━━━━━━
 
 • <b>/import</b> → Importar stickers de LINE/Kakao 🏪
@@ -202,7 +202,7 @@ func sendAskID(c tele.Context) error {
 	btnAuto := selector.Data("Generar automáticamente 🔗", "auto")
 	selector.Inline(selector.Row(btnAuto))
 	return c.Send(`
-<b>Por favor envía un ID para el paquete de stickers, se usará para generar su link</b>
+<blockquote><b>Por favor envía un ID para el paquete de stickers, se usará para generar su link</b></blockquote>
 Solo puede contener letras, números y guiones bajos
 ━━━━━━━━━
 
@@ -285,9 +285,9 @@ func sendSearchResult(entriesWant int, lines []LineStickerQ, c tele.Context) err
 }
 
 func sendAskStickerFile(c tele.Context) error {
-	return c.Send("Empecemos a crear tu paquete!!! Por favor envíame <b>imágenes/fotos/stickers</b> (que sean menos de 120 en total) 📸,\n" +
+	return c.Send("Empecemos a crear tu paquete!!! Por favor envíame imágenes/fotos/stickers (que sean menos de 120 en total) 📸,\n" +
 		"o puedes enviarme un archivo comprimido que contenga las imágenes, es totalmente válido\n\n" +
-		"espera a que finalice la carga y luego pulsa en 'Finalizar subida 💜'.\n")
+		"espera a que finalice la carga y luego pulsa en 'Finalizar subida' 💜.\n")
 }
 
 func sendInStateWarning(c tele.Context) error {
