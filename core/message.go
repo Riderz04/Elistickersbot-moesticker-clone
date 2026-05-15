@@ -18,7 +18,9 @@ func sendStartMessage(c tele.Context) error {
 	// Enviar la imagen con el texto como caption
 	photo := &tele.Photo{
 		File: tele.FromURL("https://files.catbox.moe/inn3u2.jpg"),
-		Caption: `¡Hola! soy <b>Eli♡Bot Stickers🫟</b>, un clon modificado de <a href="https://github.com/star-39/moe-sticker-bot">Moe Sticker Bot</a>. Usa los siguientes comandos para iniciar tu experiencia:
+		Caption: `<blockquote>¡Hola! soy <b>Eli♡Bot Stickers🫟</b>, un clon modificado de <a href="https://github.com/star-39/moe-sticker-bot">Moe Sticker Bot</a> 
+Usa los siguientes comandos para iniciar tu experiencia:</blockquote>
+━━━━━━━━━
 
 • Envía <b>el enlace de stickers de LINE/Kakao</b> para importar o descargar 📦
 • Envía <b>stickers, enlaces o GIFs de Telegram</b> para descargarlos o exportarlos a WhatsApp
@@ -37,24 +39,30 @@ func sendStartMessage(c tele.Context) error {
 
 func sendCommandList(c tele.Context) error {
 	message := `
-• Comandos disponibles:
+🟣<blockquote><b>Comandos disponibles</b></blockquote>🟣
+━━━━━━━━━
 
-<b>/import</b>  <b>/search</b> → Importar o buscar stickers de LINE/Kakao ✅
-<b>/download</b>  <b>/create</b>  <b>/manage</b> → Descargar, crear y administrar paquetes de stickers de Telegram ✅
+• <b>/import</b> → Importar stickers de LINE/Kakao 🏪
+• <b>/search</b> → Buscar stickers de LINE/Kakao 🔎
+• <b>/download</b> → Descargar paquetes de stickers de Telegram 🗂
+• <b>/create</b> → Crear paquetes de stickers de Telegram 🆕
+• <b>/manage</b> → Gestionar tus paquetes de stickers de Telegram ✅
+
+<i>Estos son todos mis comandos por ahora!</i>
 `
 	return c.Send(message, tele.ModeHTML, tele.NoPreview)
 }
 
 func sendAskEmoji(c tele.Context) error {
 	selector := &tele.ReplyMarkup{}
-	btnManu := selector.Data("Asignar por separado", "manual")
-	btnRand := selector.Data(`Asignar en lote como "⭐"`, "random")
+	btnManu := selector.Data("Asignar emojis por separado", "manual")
+	btnRand := selector.Data(`Asignar todos los emojis como "⭐"`, "random")
 	selector.Inline(selector.Row(btnManu), selector.Row(btnRand))
 
 	return c.Send(`Para las funciones, Telegram requiere que cada sticker posea un emoji y palabras clave para identificarlo:
 
-• Pulsa "Asignar por separado" para asignar un emoji o palabras clave a cada uno.
-• Envía un emoji para asignar el mismo a todos los stickers automáticamente.`,
+• Pulsa <b>"Asignar por separado"</b> para asignar un emoji o palabras clave a cada uno
+• Puedes enviar un emoji abajo para asignar el mismo a todos los stickers automáticamente!`,
 		selector)
 }
 
@@ -181,12 +189,12 @@ func sendAskTitle_Import(c tele.Context) error {
 	}
 	selector.Inline(titleButtons...)
 
-	return c.Send("Por favor envíame un título para este paquete de stickers 💫. También puedes seleccionar un título original:\n"+
+	return c.Send("Por favor envíame un título para este paquete de stickers 💜. También puedes seleccionar un título original en la siguiente lista:\n"+
 		titleText, selector, tele.ModeHTML)
 }
 
 func sendAskTitle(c tele.Context) error {
-	return c.Send("Por favor envíame un título para este paquete de stickers 💫.\n")
+	return c.Send("Por favor envíame un título para este paquete de stickers 💜\n")
 }
 
 func sendAskID(c tele.Context) error {
@@ -194,21 +202,23 @@ func sendAskID(c tele.Context) error {
 	btnAuto := selector.Data("Generar automáticamente 🔗", "auto")
 	selector.Inline(selector.Row(btnAuto))
 	return c.Send(`
-Por favor envía un ID para el paquete de stickers, se usará para generar su link.
-Solo puede contener letras, números y guiones bajos.
+<b>Por favor envía un ID para el paquete de stickers, se usará para generar su link</b>
+Solo puede contener letras, números y guiones bajos
+━━━━━━━━━
 
-Por ejemplo:
+• Por ejemplo:
 <code>My_favSticker21</code>
 
-El ID normalmente no es importante, puedes pulsar "Generar automáticamente".`, selector, tele.ModeHTML)
+<i>El ID normalmente no es importante, puedes pulsar "Generar automáticamente"</i>`, selector, tele.ModeHTML)
 }
 
 func sendAskImportLink(c tele.Context) error {
 	return c.Send(`
-Por favor envíame el enlace de la tienda LINE/Kakao del paquete de stickers ✅. 
-Puedes obtener este enlace desde la aplicación, en la tienda de stickers, pulsando Compartir -> Copiar enlace.
+Por favor envíame el enlace de la tienda LINE/Kakao del paquete de stickers ✅
+Puedes obtener este enlace desde la misma aplicación o web, en la tienda de stickers, pulsando Compartir -> Copiar enlace 💜
+━━━━━━━━━
 
-Por ejemplo:
+• Por ejemplo:
 <code>https://store.line.me/stickershop/product/7673/ja</code>
 <code>https://e.kakao.com/t/pretty-all-friends</code>
 <code>https://emoticon.kakao.com/items/lV6K2fWmU7CpXlHcP9-ysQJx9rg=?referer=share_link</code>`,
@@ -275,9 +285,9 @@ func sendSearchResult(entriesWant int, lines []LineStickerQ, c tele.Context) err
 }
 
 func sendAskStickerFile(c tele.Context) error {
-	return c.Send("Empecemos!!! Por favor envíame imágenes/fotos/stickers (que sean menos de 120 en total) 📸,\n" +
-		"o puedes enviarme un archivo comprimido que contenga las imágenes,\n" +
-		"espera a que finalice la subida y luego pulsa 'Finalizar subida'.\n")
+	return c.Send("Empecemos a crear tu paquete!!! Por favor envíame <b>imágenes/fotos/stickers</b> (que sean menos de 120 en total) 📸,\n" +
+		"o puedes enviarme un archivo comprimido que contenga las imágenes, es totalmente válido\n\n" +
+		"espera a que finalice la carga y luego pulsa en 'Finalizar subida 💜'.\n")
 }
 
 func sendInStateWarning(c tele.Context) error {
@@ -409,9 +419,15 @@ Preparando stickers, por favor espera ⏳...
 		"https://t.me/addstickers/"+ud.stickerData.id,
 		escapeTagMark(ud.stickerData.title),
 		optMsg)
+
 	ud.progress = message
 
-	teleMsg, err := c.Bot().Send(c.Recipient(), message, tele.ModeHTML)
+	gif := &tele.Animation{
+		File:    tele.FromURL("https://files.catbox.moe/2q0e9k.gif"),
+		Caption: message,
+	}
+
+	teleMsg, err := c.Bot().Send(c.Recipient(), gif, tele.ModeHTML)
 	ud.progressMsg = teleMsg
 	return message, teleMsg, err
 }
@@ -665,7 +681,7 @@ Ejemplo: <code>https://emoticon.kakao.com/items/lV6K2fWmU7CpXlHcP9-ysQJx9rg=?ref
 }
 
 func sendUseCommandToImport(c tele.Context) error {
-	return c.Send("Por favor usa /create para crear un paquete de stickers usando tus propias fotos y videos ₍^. .^₎Ⳋ /start\n")
+	return c.Send("Por favor usa /create para crear un paquete de stickers usando tus propias imagenes y videos ₍^. .^₎Ⳋ /start\n")
 }
 
 func sendOneStickerFailedToAdd(c tele.Context, pos int, err error) error {
