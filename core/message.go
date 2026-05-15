@@ -61,7 +61,7 @@ func sendAskEmoji(c tele.Context) error {
 
 	return c.Send(`Para las funciones, Telegram requiere que cada sticker posea un emoji y palabras clave para identificarlo:
 
-• Pulsa <b>"Asignar por separado"</b> para asignar un emoji o palabras clave a cada uno
+• Pulsa "Asignar por separado" para asignar un emoji o palabras clave a cada uno
 • Puedes enviar un emoji abajo para asignar el mismo a todos los stickers automáticamente!`,
 		selector)
 }
