@@ -25,7 +25,7 @@ Usa los siguientes comandos para iniciar tu experiencia:</blockquote>
 • Envía <b>el enlace de stickers de LINE/Kakao</b> para importar o descargar 📦
 • Envía <b>stickers, enlaces o GIFs de Telegram</b> para descargarlos o exportarlos a WhatsApp
 • Envía <b>palabras clave</b> para buscar paquetes de stickers 🔎
-• Usa <b>/create</b> o <b>/manage</b> para crear o administrar paquetes de stickers y CustomEmoji
+• Usa <b>/create</b> o <b>/manage</b> para crear o administrar paquetes de stickers y emojis personalizados
 • Usa <b>/command_list</b> para ver todos los comandos disponibles 👾
 
 ╔╗╔╗╔═╗╔╗─╔╗─╔═╗
@@ -39,7 +39,7 @@ Usa los siguientes comandos para iniciar tu experiencia:</blockquote>
 
 func sendCommandList(c tele.Context) error {
 	message := `
-<blockquote><b>🟣Comandos disponibles🟣</b></blockquote>
+<blockquote><b>🟣 Comandos disponibles 🟣</b></blockquote>
 ━━━━━━━━━
 
 • <b>/import</b> → Importar stickers de LINE/Kakao 🏪
@@ -61,9 +61,9 @@ func sendAskEmoji(c tele.Context) error {
 
 	return c.Send(`Para las funciones, Telegram requiere que cada sticker posea un emoji y palabras clave para identificarlo:
 
-• Pulsa "Asignar por separado" para asignar un emoji o palabras clave a cada uno
-• Puedes enviar un emoji abajo para asignar el mismo a todos los stickers automáticamente!`,
-		selector)
+• Pulsa <b>"Asignar por separado"</b> para asignar un emoji o palabras clave a cada uno
+• O puedes enviar un emoji abajo para asignar el mismo a todos los stickers automáticamente!`,
+		selector, tele.ModeHTML)
 }
 
 func sendConfirmExportToWA(c tele.Context, sn string, hex string) error {
@@ -148,12 +148,12 @@ func sendAskWantImportOrDownload(c tele.Context, avalAsEmoji bool) error {
 	if avalAsEmoji {
 		selector.Inline(selector.Row(btnImportSticker), selector.Row(btnImportEmoji), selector.Row(btnDownload))
 		msg = `
-Puedes importar este paquete de stickers a Telegram o descargarlo.
+Puedes importar este paquete de stickers directamente a Telegram o descargarlo ✅
 También puedes importarlo como Emoji personalizado, pero recuerda que necesitarás Telegram Premium para enviarlos.`
 	} else {
 		selector.Inline(selector.Row(btnImportSticker), selector.Row(btnDownload))
 		msg = `
-Puedes importar este paquete de stickers a Telegram o descargarlo.`
+Puedes importar este paquete de stickers directamente a Telegram o descargarlo ✅`
 	}
 
 	return c.Reply(msg, selector)
@@ -189,12 +189,12 @@ func sendAskTitle_Import(c tele.Context) error {
 	}
 	selector.Inline(titleButtons...)
 
-	return c.Send("Por favor envíame un título para este paquete de stickers 💜. También puedes seleccionar un título original en la siguiente lista:\n"+
+	return c.Send("<b>Por favor envíame un título para este paquete de stickers</b> 💜\nTambién puedes seleccionar un título original de la siguiente lista:\n"+
 		titleText, selector, tele.ModeHTML)
 }
 
 func sendAskTitle(c tele.Context) error {
-	return c.Send("Por favor envíame un título para este paquete de stickers 💜\n")
+	return c.Send("Por favor envíame un título para este paquete de stickers 💜\n\nRecuerda que este será el título que obtendrá tu paquete de stickers, pero, también lo podrás editar luego si lo necesitas")
 }
 
 func sendAskID(c tele.Context) error {
@@ -202,7 +202,7 @@ func sendAskID(c tele.Context) error {
 	btnAuto := selector.Data("Generar automáticamente 🔗", "auto")
 	selector.Inline(selector.Row(btnAuto))
 	return c.Send(`
-<blockquote><b>Por favor envía un ID para el paquete de stickers, se usará para generar su link</b></blockquote>
+<blockquote><b>Por favor envía un ID para el paquete de stickers, se usará para generar su link 📥</b></blockquote>
 Solo puede contener letras, números y guiones bajos
 ━━━━━━━━━
 
@@ -214,11 +214,12 @@ Solo puede contener letras, números y guiones bajos
 
 func sendAskImportLink(c tele.Context) error {
 	return c.Send(`
-Por favor envíame el enlace de la tienda LINE/Kakao del paquete de stickers ✅
+<blockquote><b>Por favor envíame el enlace de la tienda LINE/Kakao del paquete de stickers ✅</b></blockquote>
 Puedes obtener este enlace desde la misma aplicación o web, en la tienda de stickers, pulsando Compartir -> Copiar enlace 💜
 ━━━━━━━━━
 
-• Por ejemplo:
+• <b>Por ejemplo:</b>
+
 <code>https://store.line.me/stickershop/product/7673/ja</code>
 <code>https://e.kakao.com/t/pretty-all-friends</code>
 <code>https://emoticon.kakao.com/items/lV6K2fWmU7CpXlHcP9-ysQJx9rg=?referer=share_link</code>`,
@@ -285,9 +286,12 @@ func sendSearchResult(entriesWant int, lines []LineStickerQ, c tele.Context) err
 }
 
 func sendAskStickerFile(c tele.Context) error {
-	return c.Send("Empecemos a crear tu paquete!!! Por favor envíame imágenes/fotos/stickers (que sean menos de 120 en total) 📸,\n" +
-		"o puedes enviarme un archivo comprimido que contenga las imágenes, es totalmente válido\n\n" +
-		"espera a que finalice la carga y luego pulsa en 'Finalizar subida' 💜.\n")
+	return c.Send(`<blockquote><b>Empecemos a crear tu paquete de stickers!</b></blockquote>
+	
+<b>Por favor envíame imágenes/fotos/stickers (que sean menos de 120 en total) 📸</b>
+También, puedes enviarme un archivo comprimido que contenga las imágenes, es totalmente válido
+Espera a que finalice la carga y luego pulsa → <b>Finalizar subida 💜</b>`,
+		tele.ModeHTML)
 }
 
 func sendInStateWarning(c tele.Context) error {
@@ -308,12 +312,12 @@ func sendNoSessionWarning(c tele.Context) error {
 
 func sendAskSTypeToCreate(c tele.Context) error {
 	selector := &tele.ReplyMarkup{}
-	btnRegular := selector.Data("Paquete de stickers ✨", CB_REGULAR_STICKER)
-	btnCustomEmoji := selector.Data("Emojis personalizados 🌟", CB_CUSTOM_EMOJI)
+	btnRegular := selector.Data("Paquete de stickers 🎇", CB_REGULAR_STICKER)
+	btnCustomEmoji := selector.Data("Emojis personalizados 🎆", CB_CUSTOM_EMOJI)
 
 	selector.Inline(selector.Row(btnRegular), selector.Row(btnCustomEmoji))
-	return c.Send("¿Qué tipo de paquete quieres crear? ₍^. .^₎Ⳋ\nRecuerda que los emojis personalizados solo pueden ser enviados por usuarios con Telegram Premium.",
-		selector)
+	return c.Send("<b>¿Qué tipo de paquete quieres crear? ₍^. .^₎Ⳋ</b>\nTen en cuenta que los emojis personalizados solo pueden ser enviados por usuarios con Telegram Premium 🌟\n\n <b>Selecciona una opción</b>",
+		selector, tele.ModeHTML)
 }
 
 func sendAskEmojiAssign(c tele.Context) error {
@@ -373,8 +377,7 @@ func sendFatalError(err error, c tele.Context) {
 		}
 	}
 
-	c.Send("<b>Error fatal. Por favor intenta de nuevo con /start</b>\n\n"+
-		"Puedes reportar este error en https://github.com/star-39/moe-sticker-bot/issues\n\n"+
+	c.Send("<b>Error crítico al procesar. Por favor intenta de nuevo con /start</b>"+
 		"<code>"+errMsg+"</code>", tele.ModeHTML, tele.NoPreview)
 }
 

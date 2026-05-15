@@ -110,7 +110,7 @@ func handleNoSession(c tele.Context) error {
 			go prepareWebAppExportStickers(ss, hex)
 			return sendConfirmExportToWA(c, id, hex)
 		case CB_BYE:
-			return c.Send("Bye bye~~ usa de nuevo /start para iniciarme")
+			return c.Send("Bye bye~ usa de nuevo /start para iniciarme ✅")
 		}
 	}
 

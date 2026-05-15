@@ -98,7 +98,7 @@ func endSession(c tele.Context) {
 // This one will say goodbye.
 func terminateSession(c tele.Context) {
 	cleanUserDataAndDir(c.Sender().ID)
-	c.Send("Bye bye~~ usa de nuevo /start para iniciarme")
+	c.Send("Bye bye~ usa de nuevo /start para iniciarme ✅")
 }
 
 func endManageSession(c tele.Context) {

@@ -68,9 +68,9 @@ func cmdQuit(c tele.Context) error {
 	log.Debug("Received user quit request.")
 	ud, exist := users.data[c.Sender().ID]
 	if !exist {
-		return c.Send("Por favor usa /start", &tele.ReplyMarkup{RemoveKeyboard: true})
+		return c.Send("Acción no reconocida. Por favor utiliza /start nuevamente para iniciarme", &tele.ReplyMarkup{RemoveKeyboard: true})
 	}
-	c.Send("Espere por favor...")
+	c.Send("Espere por favor...⏳")
 	ud.cancel()
 	// for _, s := range ud.stickerData.stickers {
 	// 	s.wg.Wait()
