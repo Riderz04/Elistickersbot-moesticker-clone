@@ -403,23 +403,24 @@ func waitSTitle(c tele.Context) error {
 
 	// User sent text instead of clicking button.
 	if c.Callback() == nil {
-		if command == "create" || command == "import" {
+		switch command {
+		case "create", "import":
 			ud.stickerData.title = c.Message().Text
-		} else if command == "manage" {
+
+		case "manage":
 			err := c.Bot().SetStickerSetTitle(c.Recipient(), c.Message().Text, ud.stickerData.id)
 			setState(c, "waitCbEditChoice")
 			if err != nil {
 				log.Warnln(err)
 				return sendSSTitleFailedToChanged(c)
-			} else {
-				return sendSSTitleChanged(c)
 			}
-		} else {
+			return sendSSTitleChanged(c)
+
+		default:
 			return nil
 		}
 		// User clicked a button, only command "import" is allowed.
 	} else {
-		//Reject.
 		if command != "import" {
 			return nil
 		}

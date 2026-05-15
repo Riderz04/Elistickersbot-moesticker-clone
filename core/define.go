@@ -19,7 +19,7 @@ var dataDir string
 var botName string
 
 // ['uid'] -> bool channels
-var autocommitWorkersList = make(map[int64][]chan bool)
+// var autocommitWorkersList = make(map[int64][]chan bool)
 var users Users
 
 var MSB_DEFAULT_STICKER_KEYWORDS = []string{"sticker", "moe_sticker_bot", "moe"}

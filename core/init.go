@@ -130,7 +130,7 @@ func onError(err error, c tele.Context) {
 	cleanUserDataAndDir(c.Sender().ID)
 }
 
-func initBot(conf ConfigTemplate) *tele.Bot {
+func initBot(_ ConfigTemplate) *tele.Bot {
 	var poller tele.Poller
 	url := tele.DefaultApiURL
 

@@ -15,8 +15,10 @@ import (
 )
 
 func sendStartMessage(c tele.Context) error {
-	message := `
-¡Hola! soy <b>Eli♡Bot Stickers🫟</b>, un clon modificado de <a href="https://github.com/star-39/moe-sticker-bot">Moe Sticker Bot</a>. Usa los siguientes comandos para iniciar tu experiencia:
+	// Enviar la imagen con el texto como caption
+	photo := &tele.Photo{
+		File: tele.FromURL("https://files.catbox.moe/inn3u2.jpg"),
+		Caption: `¡Hola! soy <b>Eli♡Bot Stickers🫟</b>, un clon modificado de <a href="https://github.com/star-39/moe-sticker-bot">Moe Sticker Bot</a>. Usa los siguientes comandos para iniciar tu experiencia:
 
 • Envía <b>el enlace de stickers de LINE/Kakao</b> para importar o descargar 📦
 • Envía <b>stickers, enlaces o GIFs de Telegram</b> para descargarlos o exportarlos a WhatsApp
@@ -27,9 +29,10 @@ func sendStartMessage(c tele.Context) error {
 ╔╗╔╗╔═╗╔╗─╔╗─╔═╗
 ║╚╝║║╦╝║║─║║─║║║
 ║╔╗║║╩╗║╚╗║╚╗║║║
-╚╝╚╝╚═╝╚═╝╚═╝╚═╝
-`
-	return c.Send(message, tele.ModeHTML, tele.NoPreview)
+╚╝╚╝╚═╝╚═╝╚═╝╚═╝`,
+	}
+
+	return c.Send(photo, tele.ModeHTML)
 }
 
 func sendCommandList(c tele.Context) error {
@@ -73,7 +76,7 @@ Descarga:
 		tele.ModeHTML, tele.NoPreview, selector)
 }
 
-func genSDnMnEInline(canManage bool, isTGS bool, sn string) *tele.ReplyMarkup {
+func genSDnMnEInline(canManage bool, isTGS bool, _ string) *tele.ReplyMarkup {
 	selector := &tele.ReplyMarkup{}
 	btnSingle := selector.Data("Descargar este sticker", CB_DN_SINGLE)
 	btnAll := selector.Data("Descargar paquete de stickers", CB_DN_WHOLE)
@@ -557,9 +560,9 @@ Debido a este mecanismo, el paquete resultante puede contener stickers duplicado
 `)
 }
 
-func sendTooManyFloodLimits(c tele.Context) error {
-	return c.Send("Lo siento, parece que activaste el límite de frecuencia de Telegram demasiadas veces. Se recomienda intentarlo de nuevo más tarde.\n")
-}
+// func sendTooManyFloodLimits(c tele.Context) error {
+//return c.Send("Lo siento, parece que activaste el límite de frecuencia de Telegram demasiadas veces. Se recomienda intentarlo de nuevo más tarde.\n")
+//}
 
 func sendNoCbWarn(c tele.Context) error {
 	return c.Send("¡Por favor pulsa un botón! /quit\n")
