@@ -377,7 +377,7 @@ func sendFatalError(err error, c tele.Context) {
 		}
 	}
 
-	c.Send("<b>Error crítico al procesar. Por favor intenta de nuevo con /start</b>\nError: "+
+	c.Send("<b>Error crítico al procesar. Por favor intenta de nuevo con /start</b>\nID: "+
 		"<code>"+errMsg+"</code>", tele.ModeHTML, tele.NoPreview)
 }
 
