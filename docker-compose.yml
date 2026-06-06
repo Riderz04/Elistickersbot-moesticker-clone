@@ -8,10 +8,34 @@ services:
     container_name: moe-sticker-bot
     restart: unless-stopped
     env_file: .env
-
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
+    depends_on:
+      mysql:
+        condition: service_healthy   # espera a que MySQL pase el healthcheck
+    networks:
+      - backend
 
-    ports:
-      - "8080:8080"
+  mysql:
+    image: docker.io/library/mysql:8.0
+    container_name: moe-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: zaychik
+      MYSQL_DATABASE: KyzStickersBot_db
+    volumes:
+      - ./backup.sql:/docker-entrypoint-initdb.d/backup.sql
+      - ./mysql_data:/var/lib/mysql
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pzaychik"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  backend:
+    name: moe-backend
+
