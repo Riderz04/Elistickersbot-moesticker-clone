@@ -149,6 +149,7 @@ func initBot(_ ConfigTemplate) *tele.Bot {
 		log.Fatal(err)
 	}
 	return b
+
 }
 
 func initWorkspace(b *tele.Bot) {
